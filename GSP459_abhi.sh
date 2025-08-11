@@ -4,7 +4,7 @@ NC='\033[0m'
 pattern=(
 "**********************************************************"
 "**                 S U B S C R I B E  TO                **"
-"**                 ABHI ARCADE SOLUTION                 **"
+"**                 AMINEX                **"
 "**                                                      **"
 "**********************************************************"
 )
@@ -29,7 +29,7 @@ gcloud compute routers create nat-router --region=$REGION --network=privatenet
 pattern=(
 "**********************************************************"
 "**                 S U B S C R I B E  TO                **"
-"**                 ABHI ARCADE SOLUTION                 **"
+"**                 AMINEX                 **"
 "**                                                      **"
 "**********************************************************"
 )
