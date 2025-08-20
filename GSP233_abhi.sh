@@ -4,7 +4,7 @@ NC='\033[0m'
 pattern=(
 "**********************************************************"
 "**                 S U B S C R I B E  TO                **"
-"**                 ABHI ARCADE SOLUTION                 **"
+"**                 AMINEX https://www.youtube.com/@kamitabh244                **"
 "**                                                      **"
 "**********************************************************"
 )
@@ -24,7 +24,7 @@ terraform apply -var="region=$REGION" -var="location=$ZONE" --auto-approve
 pattern=(
 "**********************************************************"
 "**                 S U B S C R I B E  TO                **"
-"**                 ABHI ARCADE SOLUTION                 **"
+"**                 AMINEX https://www.youtube.com/@kamitabh244                 **"
 "**                                                      **"
 "**********************************************************"
 )
