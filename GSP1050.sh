@@ -4,7 +4,7 @@ NC='\033[0m'
 pattern=(
 "**********************************************************"
 "**                 S U B S C R I B E  TO                **"
-"**                 ABHI ARCADE SOLUTION                 **"
+"**                 Aminex -https://www.youtube.com/@kamitabh244                 **"
 "**                                                      **"
 "**********************************************************"
 )
@@ -99,7 +99,7 @@ python snippets.py banking-ops-instance --database-id  banking-ops-db add_index
 pattern=(
 "**********************************************************"
 "**                 S U B S C R I B E  TO                **"
-"**                 ABHI ARCADE SOLUTION                 **"
+"**                 Aminex - https://www.youtube.com/@kamitabh244                **"
 "**                                                      **"
 "**********************************************************"
 )
