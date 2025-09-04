@@ -1,7 +1,6 @@
 #!/bin/bash
 # ==============================================
 # Full Automation for Document AI Custom Extractor Lab (GSP1142)
-# Includes file prep, reminders, and manual step guidance
 # ==============================================
 
 # ----------------------------------------------
@@ -38,13 +37,13 @@ mkdir -p ./AutoLabel
 mkdir -p ./JSON-2
 
 echo " · Downloading sample W-2 document"
-gcloud storage cp gs://cloud-samples-data/documentai/Custom/W2/PDF/W2_XL_input_clean_2950.pdf ./
+gcloud storage cp gs://cloud-samples-data/documentai/Custom/W2/PDF/W2_XL_input_clean_2950.pdf ./ || exit 1
 
 echo " · Downloading AutoLabel dataset"
-gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/AutoLabel/* ./AutoLabel/
+gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/AutoLabel/* ./AutoLabel/ || exit 1
 
 echo " · Downloading Prelabeled JSON-2 dataset"
-gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/JSON-2/* ./JSON-2/
+gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/JSON-2/* ./JSON-2/ || exit 1
 
 echo "✅ All required files are now downloaded and ready."
 echo ""
@@ -66,12 +65,11 @@ echo "   • federal_income_tax_withheld (Money, Required multiple)"
 echo "   • social_security_tax_withheld (Money, Required multiple)"
 echo "   • social_security_wages (Money, Required multiple)"
 echo "   • wages_tips_other_compensation (Money, Required multiple)"
-echo "4️⃣ Upload sample W-2 PDF and label it (use bounding box tool for missing ones)"
-echo "5️⃣ Build a processor version using 'Foundation model' → Name it 'w2-foundation-model'"
-echo "6️⃣ Import AutoLabel data from './AutoLabel' with auto-labeling ON"
-echo "7️⃣ Import Prelabeled data from './JSON-2' with Auto-split"
-echo "8️⃣ Train a new custom model version → Name it 'w2-custom-model' (Model-based training)"
-echo "9️⃣ Let it run (can take a few hours); monitor build → Deploy & Use tab"
+echo "4️⃣ Upload sample W-2 PDF and label it"
+echo "5️⃣ Build processor version using Foundation model → 'w2-foundation-model'"
+echo "6️⃣ Import AutoLabel data from './AutoLabel/' with auto-labeling ON"
+echo "7️⃣ Import Prelabeled data from './JSON-2/' with Auto-split"
+echo "8️⃣ Train a new custom model version → Name it 'w2-custom-model'"
 echo "============================================================="
 echo ""
 
