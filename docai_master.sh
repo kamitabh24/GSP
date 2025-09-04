@@ -29,7 +29,7 @@ echo "🔹 Location: $LOCATION"
 
 # 4. Create Processor
 echo "🔹 Creating processor..."
-PROCESSOR_FULL=$(gcloud documentai processors create \
+PROCESSOR_FULL=$(gcloud beta documentai processors create \
   --display-name=$PROCESSOR_NAME \
   --type=$PROCESSOR_TYPE \
   --location=$LOCATION \
@@ -80,14 +80,14 @@ EOF
 
 # 7. Import AutoLabel Dataset
 echo "🔹 Importing AutoLabel dataset..."
-gcloud documentai dataset import \
+gcloud beta documentai dataset import \
   --processor=$PROCESSOR_ID \
   --location=$LOCATION \
   --gcs-prefix=gs://cloud-samples-data/documentai/Custom/W2/AutoLabel
 
 # 8. Import PreLabeled Dataset
 echo "🔹 Importing PreLabeled dataset..."
-gcloud documentai dataset import \
+gcloud beta documentai dataset import \
   --processor=$PROCESSOR_ID \
   --location=$LOCATION \
   --gcs-prefix=gs://cloud-samples-data/documentai/Custom/W2/JSON-2
@@ -95,7 +95,7 @@ gcloud documentai dataset import \
 # 9. Start Training
 echo "🔹 Starting training..."
 VERSION_NAME="w2-custom-model"
-TRAIN_OP=$(gcloud documentai processor-versions train \
+TRAIN_OP=$(gcloud beta documentai processor-versions train \
   --processor=$PROCESSOR_ID \
   --display-name=$VERSION_NAME \
   --data-split=auto \
@@ -107,7 +107,7 @@ echo "✅ Training job submitted: $TRAIN_OP"
 # 10. Training Status Watcher
 echo "🔹 Monitoring training status (this may take a while)..."
 while true; do
-  STATUS=$(gcloud documentai processor-versions describe $TRAIN_OP --location=$LOCATION --format="value(state)")
+  STATUS=$(gcloud beta documentai processor-versions describe $TRAIN_OP --location=$LOCATION --format="value(state)")
   echo "   Current Status: $STATUS"
   if [[ "$STATUS" == "DEPLOYED" ]] || [[ "$STATUS" == "FAILED" ]]; then
     break
