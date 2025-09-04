@@ -1,53 +1,85 @@
 #!/bin/bash
-echo ""
-echo "🚀 Custom Document Extraction Lab (GSP1142)"
-echo "🙏 Subscribe to Aminex Please: https://www.youtube.com/@kamitabh244"
+# ==============================================
+# Full Automation for Document AI Custom Extractor Lab (GSP1142)
+# Includes file prep, reminders, and manual step guidance
+# ==============================================
+
+# ----------------------------------------------
+#  YouTube Subscribe Banner (Start)
+# ----------------------------------------------
+echo "==============================================="
+echo "🚀 Don't forget to Subscribe to Aminex on YouTube!"
+echo "👉 https://www.youtube.com/@kamitabh244"
+echo "==============================================="
 echo ""
 
-# ---------------------------------------------------------
-# User Inputs
-# ---------------------------------------------------------
+# ----------------------------------------------
+# 1. User Input
+# ----------------------------------------------
 read -p "👉 Enter your GCP Project ID: " PROJECT_ID
-read -p "👉 Enter location (us or eu, e.g. us): " LOCATION
+read -p "👉 Enter your Location (e.g., us, us-central1): " LOCATION
 
-# ---------------------------------------------------------
-# Enable APIs + Install SDK
-# ---------------------------------------------------------
-echo "✅ Enabling Document AI API..."
+# ----------------------------------------------
+# 2. Enable API & Install SDK
+# ----------------------------------------------
+echo ""
+echo "🔹 Enabling Document AI API..."
 gcloud services enable documentai.googleapis.com
 
-echo "✅ Installing Python SDK..."
+echo "🔹 Installing Python SDK (if needed)..."
 pip3 install --upgrade google-cloud-documentai
 
-# ---------------------------------------------------------
-# Download sample W2 docs (for upload / import)
-# ---------------------------------------------------------
-echo "📥 Downloading W-2 sample PDFs..."
-gcloud storage cp gs://cloud-samples-data/documentai/Custom/W2/PDF/W2_XL_input_clean_2950.pdf .
-gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/AutoLabel ./AutoLabel
-gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/JSON-2 ./JSON-2
+# ----------------------------------------------
+# 3. Download Required Data (Error-Free)
+# ----------------------------------------------
+echo "🔹 Preparing local data folders and downloading content..."
 
-# ---------------------------------------------------------
-# Instructions to user (because schema & training require UI)
-# ---------------------------------------------------------
+mkdir -p ./AutoLabel
+mkdir -p ./JSON-2
+
+echo " · Downloading sample W-2 document"
+gcloud storage cp gs://cloud-samples-data/documentai/Custom/W2/PDF/W2_XL_input_clean_2950.pdf ./
+
+echo " · Downloading AutoLabel dataset"
+gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/AutoLabel/* ./AutoLabel/
+
+echo " · Downloading Prelabeled JSON-2 dataset"
+gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/JSON-2/* ./JSON-2/
+
+echo "✅ All required files are now downloaded and ready."
 echo ""
-echo "⚡ NEXT STEPS (Manual in Console Workbench UI):"
-echo "1️⃣ Go to Console → Navigation → Document AI"
-echo "2️⃣ Create a Custom Extractor processor → Name: lab-custom-extractor → Location: $LOCATION"
-echo "3️⃣ Define Schema fields:"
-echo "   - control_number (Number, Optional multiple)"
-echo "   - employees_social_security_number (Number, Required multiple)"
-echo "   - employer_identification_number (Number, Required multiple)"
-echo "   - employers_name_address_and_zip_code (Address, Required multiple)"
-echo "   - federal_income_tax_withheld (Money, Required multiple)"
-echo "   - social_security_tax_withheld (Money, Required multiple)"
-echo "   - social_security_wages (Money, Required multiple)"
-echo "   - wages_tips_other_compensation (Money, Required multiple)"
-echo "4️⃣ Upload sample W2_XL_input_clean_2950.pdf → Annotate fields manually"
-echo "5️⃣ Build processor version with Foundation Model (name: w2-foundation-model)"
-echo "6️⃣ Import AutoLabel data (./AutoLabel) with auto-labeling enabled"
-echo "7️⃣ Import Prelabeled JSON data (./JSON-2)"
-echo "8️⃣ Train New Version (name: w2-custom-model)"
+
+# ----------------------------------------------
+# 4. Instructions for Manual Steps in Console UI
+# ----------------------------------------------
+echo "============= NEXT STEPS (Manual in Console UI) ============="
+echo "1️⃣ Go to Google Cloud Console → Navigation → Document AI → Workbench"
+echo "2️⃣ Click 'Create Custom Processor' → Choose 'Custom Extractor'"
+echo "   - Name: lab-custom-extractor"
+echo "   - Location: $LOCATION"
+echo "3️⃣ Define schema fields (one by one):"
+echo "   • control_number (Number, Optional multiple)"
+echo "   • employees_social_security_number (Number, Required multiple)"
+echo "   • employer_identification_number (Number, Required multiple)"
+echo "   • employers_name_address_and_zip_code (Address, Required multiple)"
+echo "   • federal_income_tax_withheld (Money, Required multiple)"
+echo "   • social_security_tax_withheld (Money, Required multiple)"
+echo "   • social_security_wages (Money, Required multiple)"
+echo "   • wages_tips_other_compensation (Money, Required multiple)"
+echo "4️⃣ Upload sample W-2 PDF and label it (use bounding box tool for missing ones)"
+echo "5️⃣ Build a processor version using 'Foundation model' → Name it 'w2-foundation-model'"
+echo "6️⃣ Import AutoLabel data from './AutoLabel' with auto-labeling ON"
+echo "7️⃣ Import Prelabeled data from './JSON-2' with Auto-split"
+echo "8️⃣ Train a new custom model version → Name it 'w2-custom-model' (Model-based training)"
+echo "9️⃣ Let it run (can take a few hours); monitor build → Deploy & Use tab"
+echo "============================================================="
 echo ""
-echo "🎉 Done! Your Custom Document Extractor processor will train (takes hours)."
-echo "🙏 End: Subscribe to Aminex Please: https://www.youtube.com/@kamitabh244"
+
+# ----------------------------------------------
+# YouTube Subscribe Reminder (End)
+# ----------------------------------------------
+echo "==============================================="
+echo "✅ Prep complete! Time to follow through the UI steps above."
+echo "🚀 Remember to Subscribe to Aminex on YouTube!"
+echo "👉 https://www.youtube.com/@kamitabh244"
+echo "==============================================="
