@@ -1,119 +1,53 @@
-#!/usr/bin/env python3
-"""
-Custom Document Extraction Lab Automation
-Document AI Workbench – End to End
-"""
+#!/bin/bash
+echo ""
+echo "🚀 Custom Document Extraction Lab (GSP1142)"
+echo "🙏 Subscribe to Aminex Please: https://www.youtube.com/@kamitabh244"
+echo ""
 
-print("🚀 Subscribe to Aminex Please: https://www.youtube.com/@kamitabh244")
+# ---------------------------------------------------------
+# User Inputs
+# ---------------------------------------------------------
+read -p "👉 Enter your GCP Project ID: " PROJECT_ID
+read -p "👉 Enter location (us or eu, e.g. us): " LOCATION
 
-from google.cloud import documentai_v1 as documentai
+# ---------------------------------------------------------
+# Enable APIs + Install SDK
+# ---------------------------------------------------------
+echo "✅ Enabling Document AI API..."
+gcloud services enable documentai.googleapis.com
 
-# -----------------------------------------------------------
-# User input
-# -----------------------------------------------------------
-PROJECT_ID = input("👉 Enter your GCP Project ID: ").strip()
-LOCATION = input("👉 Enter location (e.g. us, us-central1): ").strip()
+echo "✅ Installing Python SDK..."
+pip3 install --upgrade google-cloud-documentai
 
-client = documentai.DocumentProcessorServiceClient()
-parent = f"projects/{PROJECT_ID}/locations/{LOCATION}"
+# ---------------------------------------------------------
+# Download sample W2 docs (for upload / import)
+# ---------------------------------------------------------
+echo "📥 Downloading W-2 sample PDFs..."
+gcloud storage cp gs://cloud-samples-data/documentai/Custom/W2/PDF/W2_XL_input_clean_2950.pdf .
+gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/AutoLabel ./AutoLabel
+gcloud storage cp -r gs://cloud-samples-data/documentai/Custom/W2/JSON-2 ./JSON-2
 
-# -----------------------------------------------------------
-# 1. Create Processor
-# -----------------------------------------------------------
-def create_processor():
-    processor = documentai.Processor(
-        display_name="lab-custom-extractor",
-        type_="CUSTOM_EXTRACTION_PROCESSOR",
-    )
-    response = client.create_processor(parent=parent, processor=processor)
-    print("✅ Processor created:", response.name)
-    return response.name
-
-# -----------------------------------------------------------
-# 2. Define schema (fields)
-# -----------------------------------------------------------
-def create_schema(processor_name):
-    schema_client = documentai.SchemaServiceClient()
-    schema = documentai.Schema(
-        entity_types=[
-            documentai.Schema.EntityType(
-                name="control_number", value_type="NUMBER", occurrence_type="OPTIONAL_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="employees_social_security_number", value_type="NUMBER", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="employer_identification_number", value_type="NUMBER", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="employers_name_address_and_zip_code", value_type="ADDRESS", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="federal_income_tax_withheld", value_type="MONEY", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="social_security_tax_withheld", value_type="MONEY", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="social_security_wages", value_type="MONEY", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-            documentai.Schema.EntityType(
-                name="wages_tips_other_compensation", value_type="MONEY", occurrence_type="REQUIRED_MULTIPLE"
-            ),
-        ]
-    )
-
-    schema_name = f"{processor_name}/schema"
-    response = schema_client.update_schema(name=schema_name, schema=schema)
-    print("✅ Schema created for:", processor_name)
-    return response
-
-# -----------------------------------------------------------
-# 3. Import Documents (from GCS)
-# -----------------------------------------------------------
-def import_documents(processor_name):
-    dataset_client = documentai.DatasetServiceClient()
-
-    gcs_input = documentai.GcsPrefix(
-        gcs_uri="gs://cloud-samples-data/documentai/Custom/W2/PDF/"
-    )
-    input_config = documentai.BatchDocumentsInputConfig(gcs_prefix=gcs_input)
-
-    dataset = f"{processor_name}/dataset"
-    operation = dataset_client.import_documents(
-        name=dataset,
-        batch_documents_input_config=input_config,
-    )
-
-    print("⏳ Importing documents...")
-    result = operation.result()
-    print("✅ Documents imported:", result)
-
-# -----------------------------------------------------------
-# 4. Train processor version
-# -----------------------------------------------------------
-def train_processor(processor_name):
-    pv_client = documentai.ProcessorVersionServiceClient()
-    version = documentai.ProcessorVersion(
-        display_name="w2-custom-model",
-        document_schema=None
-    )
-    op = pv_client.train_processor_version(
-        parent=processor_name, processor_version=version
-    )
-    print("⏳ Training started...")
-    resp = op.result()
-    print("✅ Training complete:", resp.name)
-    return resp.name
-
-# -----------------------------------------------------------
-# Main Flow
-# -----------------------------------------------------------
-if __name__ == "__main__":
-    processor_name = create_processor()
-    create_schema(processor_name)
-    import_documents(processor_name)
-    train_processor(processor_name)
-
-    print("🎉 Lab automation finished successfully!")
-    print("🙏 End: Subscribe to Aminex Please https://www.youtube.com/@kamitabh244")
+# ---------------------------------------------------------
+# Instructions to user (because schema & training require UI)
+# ---------------------------------------------------------
+echo ""
+echo "⚡ NEXT STEPS (Manual in Console Workbench UI):"
+echo "1️⃣ Go to Console → Navigation → Document AI"
+echo "2️⃣ Create a Custom Extractor processor → Name: lab-custom-extractor → Location: $LOCATION"
+echo "3️⃣ Define Schema fields:"
+echo "   - control_number (Number, Optional multiple)"
+echo "   - employees_social_security_number (Number, Required multiple)"
+echo "   - employer_identification_number (Number, Required multiple)"
+echo "   - employers_name_address_and_zip_code (Address, Required multiple)"
+echo "   - federal_income_tax_withheld (Money, Required multiple)"
+echo "   - social_security_tax_withheld (Money, Required multiple)"
+echo "   - social_security_wages (Money, Required multiple)"
+echo "   - wages_tips_other_compensation (Money, Required multiple)"
+echo "4️⃣ Upload sample W2_XL_input_clean_2950.pdf → Annotate fields manually"
+echo "5️⃣ Build processor version with Foundation Model (name: w2-foundation-model)"
+echo "6️⃣ Import AutoLabel data (./AutoLabel) with auto-labeling enabled"
+echo "7️⃣ Import Prelabeled JSON data (./JSON-2)"
+echo "8️⃣ Train New Version (name: w2-custom-model)"
+echo ""
+echo "🎉 Done! Your Custom Document Extractor processor will train (takes hours)."
+echo "🙏 End: Subscribe to Aminex Please: https://www.youtube.com/@kamitabh244"
